@@ -72,7 +72,7 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (PlayerManager.localPlayer != null) { PlayerManager.localPlayer.BecomeHider(); }
+        if (!PlayerManager.localPlayer && !GameController.Instance) { PlayerManager.localPlayer.BecomeHider(); }
 
         if (PhotonNetwork.IsMasterClient)
         {

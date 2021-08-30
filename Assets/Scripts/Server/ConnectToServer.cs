@@ -14,6 +14,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         PhotonNetwork.SendRate = 10;
         PhotonNetwork.SerializationRate = 10;
         PhotonNetwork.IsMessageQueueRunning = false;
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.NetworkingClient.LoadBalancingPeer.MaximumTransferUnit = 520;
 
         PhotonNetwork.ConnectUsingSettings();
