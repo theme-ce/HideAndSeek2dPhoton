@@ -39,9 +39,9 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
 
         _view = GetComponent<PhotonView>();
 
-        if (GameObject.Find("LevelLoader") != null) 
+        if (GameObject.Find("LevelLoader") != null)
         {
-            _levelLoaderAnim = GameObject.Find("LevelLoader").GetComponent<Animator>(); 
+            _levelLoaderAnim = GameObject.Find("LevelLoader").GetComponent<Animator>();
         }
 
         if (PhotonNetwork.IsMasterClient)
@@ -68,11 +68,11 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.InstantiateRoomObject(gameController.name, Vector3.zero, Quaternion.identity);
         }
-    }
 
-    private void Update()
-    {
-        if (!PlayerManager.localPlayer && !GameController.Instance) { PlayerManager.localPlayer.BecomeHider(); }
+        if (PlayerManager.localPlayer)
+        {
+            PlayerManager.localPlayer.BecomeHider();
+        }
 
         if (PhotonNetwork.IsMasterClient)
         {

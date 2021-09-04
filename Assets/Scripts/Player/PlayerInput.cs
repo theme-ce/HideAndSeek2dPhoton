@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviourPunCallbacks
 {
-    PhotonView view;
     Animator animator;
 
     public Vector2 MovementInput
@@ -29,13 +28,12 @@ public class PlayerInput : MonoBehaviour
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
-        view = GetComponent<PhotonView>();    
+        animator = GetComponent<Animator>(); 
     }
 
     private void Update()
     {
-        if(view.IsMine)
+        if(photonView.IsMine)
         {
             ProcessMovementInput();
         }

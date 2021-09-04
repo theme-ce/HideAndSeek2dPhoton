@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -13,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SceneSettingsListFoldoutOpen: 1
   MinViewIdPerScene:
-  - sceneAsset: {fileID: 102900000, guid: 559222f4671e440cba71aecba1de3505, type: 3}
-    sceneName: SceneView_A
+  - sceneAsset: {fileID: 102900000, guid: 407a2cc04f1c1ac459c156eaf2de0a60, type: 3}
+    sceneName: Launcher
     minViewId: 2
-  - sceneAsset: {fileID: 102900000, guid: a81615022a16c489aac8daadf8f51fae, type: 3}
-    sceneName: SceneView_B
+  - sceneAsset: {fileID: 102900000, guid: efac6f3fbdb2ddf44a02d1e26ede5c27, type: 3}
+    sceneName: WaitingRoom
     minViewId: 10
+  - sceneAsset: {fileID: 102900000, guid: f8fe779bfa51210408ec35af7a970f3f, type: 3}
+    sceneName: GameScene
+    minViewId: 1

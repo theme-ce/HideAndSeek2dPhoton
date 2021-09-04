@@ -11,7 +11,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
     public Transform[] spawnPoints;
     public Text timeText;
-    public GameObject tree;
 
     private int _whichPlayerIsSeeker;
     private PhotonView _view;
@@ -51,8 +50,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         _gameTime = GameController.Instance.gameTime * 60f;
 
         if (PhotonNetwork.IsMasterClient) { StartCoroutine(DelayToPickSeeker(_prepareTime)); }
-
-        PhotonNetwork.Instantiate(tree.name, Vector3.zero, Quaternion.identity);
     }
 
     private void Update()

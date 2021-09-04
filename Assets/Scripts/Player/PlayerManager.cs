@@ -12,7 +12,6 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
     [SerializeField] GameObject pointLight;
     [SerializeField] GameObject selfLight;
     [SerializeField] Text pingText;
-    [SerializeField] Text lossText;
     [SerializeField] Text playerNameText;
 
     public bool isSeeker;
@@ -48,7 +47,6 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
     private void Update()
     {
         pingText.text = "Ping : " + PhotonNetwork.GetPing().ToString() + " ms";
-        lossText.text = "Loss : " + PhotonNetwork.PacketLossByCrcCheck.ToString();
     }
 
     //Setup Player
@@ -126,9 +124,9 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if(!collision.gameObject.GetComponent<PlayerManager>().isSeeker && isSeeker)
+            if (!collision.gameObject.GetComponent<PlayerManager>().isSeeker && isSeeker)
             {
                 collision.gameObject.GetComponent<PlayerManager>().BecomeSeekerByCatch();
             }

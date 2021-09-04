@@ -281,9 +281,7 @@ GameObject:
   - component: {fileID: 5711728171158241046}
   - component: {fileID: 5686845154042004603}
   - component: {fileID: 7968460970033571133}
-  - component: {fileID: -493548011135664678}
-  - component: {fileID: 2328026220627802812}
-  - component: {fileID: 5782190636464557833}
+  - component: {fileID: 8007520863359289120}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -331,8 +329,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 5711728171158241046}
   - {fileID: 7968460970033571133}
-  - {fileID: -493548011135664678}
-  - {fileID: 2328026220627802812}
+  - {fileID: 8007520863359289120}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -395,9 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d082faf43f5d04143a83699889953f20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashSpeed: 10
   moveSpeed: 5
-  _isDash: 0
 --- !u!114 &1515381011875558225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,7 +420,6 @@ MonoBehaviour:
   pointLight: {fileID: 7347430641432654340}
   selfLight: {fileID: 2640661287586487268}
   pingText: {fileID: 5276296649984094610}
-  lossText: {fileID: 5742563632864285012}
   playerNameText: {fileID: 7511721434622424285}
   isSeeker: 0
   isSpectator: 0
@@ -469,7 +463,7 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
---- !u!114 &-493548011135664678
+--- !u!114 &8007520863359289120
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -478,49 +472,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 2968105697478608737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 0
-  m_TeleportEnabled: 1
-  m_TeleportIfDistanceGreaterThan: 3
---- !u!114 &2328026220627802812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2968105697478608737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd471da58a405af42b1cf8031c90ae35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5782190636464557833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2968105697478608737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d06466c03d263624786afa88b52928b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  statsWindowOn: 1
-  statsOn: 1
-  healthStatsVisible: 1
-  trafficStatsOn: 0
-  buttonsOn: 0
-  statsRect:
-    serializedVersion: 2
-    x: 0
-    y: 100
-    width: 200
-    height: 50
-  WindowId: 100
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 4
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 10
+    ExtrapolateOption: 0
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 1
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
 --- !u!1 &5823316447452998796
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,7 +528,6 @@ RectTransform:
   m_Children:
   - {fileID: 429983038627895434}
   - {fileID: 3474877739201105522}
-  - {fileID: 7268241755653539494}
   m_Father: {fileID: 4396299710937937167}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -811,85 +785,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!1 &8702239804481888435
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7268241755653539494}
-  - component: {fileID: 8069082002193492960}
-  - component: {fileID: 5742563632864285012}
-  m_Layer: 0
-  m_Name: LossText
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &7268241755653539494
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8702239804481888435}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 167744174997183736}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 116.189, y: -119.8}
-  m_SizeDelta: {x: 192.308, y: 30.301}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &8069082002193492960
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8702239804481888435}
-  m_CullTransparentMesh: 1
---- !u!114 &5742563632864285012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8702239804481888435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 25
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 'Loss : '
 --- !u!1 &8766392113655846321
 GameObject:
   m_ObjectHideFlags: 0
