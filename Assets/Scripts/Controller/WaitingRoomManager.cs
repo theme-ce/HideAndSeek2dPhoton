@@ -10,19 +10,18 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
 {
     public static WaitingRoomManager instance;
 
-    public GameObject settingPanel;
-    public GameObject playerPrefab;
-    public Transform[] spawnPoints;
-    public Canvas hostCanvas;
-    public GameObject gameController;
-    public Dropdown prepareTimeDropdown;
-    public Dropdown gameTimeDropdown;
-    public Dropdown hiderSpeedDropdown;
-    public Dropdown seekerSpeedDropdown;
+    [SerializeField] GameObject settingPanel;
+    [SerializeField] GameObject playerPrefab;
+    [SerializeField] Transform[] spawnPoints;
+    [SerializeField] Canvas hostCanvas;
+    [SerializeField] GameObject gameController;
+    [SerializeField] Dropdown prepareTimeDropdown;
+    [SerializeField] Dropdown gameTimeDropdown;
+    [SerializeField] Dropdown hiderSpeedDropdown;
+    [SerializeField] Dropdown seekerSpeedDropdown;
 
     private Animator _levelLoaderAnim;
     private int _playeridx;
-    private PhotonView _view;
 
     private void Awake()
     {
@@ -37,16 +36,16 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
             Destroy(instance);
         }
 
-        _view = GetComponent<PhotonView>();
-
-        if (GameObject.Find("LevelLoader") != null)
-        {
-            _levelLoaderAnim = GameObject.Find("LevelLoader").GetComponent<Animator>();
-        }
+        if (GameObject.Find("LevelLoader") != null) { _levelLoaderAnim = GameObject.Find("LevelLoader").GetComponent<Animator>(); }
 
         if (PhotonNetwork.IsMasterClient)
         {
             hostCanvas.gameObject.SetActive(true);
+        }
+
+        if (GameController.Instance == null)
+        {
+            PhotonNetwork.InstantiateRoomObject(gameController.name, Vector3.zero, Quaternion.identity);
         }
     }
 
@@ -56,7 +55,6 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
 
         if (PlayerManager.localPlayer == null)
         {
-            int randomPos = Random.Range(0, 7);
             PhotonNetwork.Instantiate(playerPrefab.name, spawnPoints[_playeridx].position, Quaternion.identity);
         }
         else
@@ -64,25 +62,17 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
             SetPlayerPosition();
         }
 
-        if (GameController.Instance == null)
-        {
-            PhotonNetwork.InstantiateRoomObject(gameController.name, Vector3.zero, Quaternion.identity);
-        }
 
         if (PlayerManager.localPlayer)
         {
             PlayerManager.localPlayer.BecomeHider();
         }
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            hostCanvas.gameObject.SetActive(true);
-        }
     }
 
     public void ClickToStartGame()
     {
-        _view.RPC("ChangeSceneTo", RpcTarget.All, "GameScene");
+        photonView.RPC("ChangeSceneTo", RpcTarget.All, "GameScene");
     }
 
     void SetPlayerPosition()
@@ -109,6 +99,10 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
 
     public void OpenSettingPanel()
     {
+        prepareTimeDropdown.value = prepareTimeDropdown.options.FindIndex(option => option.text == GameController.Instance.prepareTime.ToString());
+        gameTimeDropdown.value = gameTimeDropdown.options.FindIndex(option => option.text == GameController.Instance.gameTime.ToString());
+        hiderSpeedDropdown.value = hiderSpeedDropdown.options.FindIndex(option => option.text == GameController.Instance.hiderSpeed.ToString());
+        seekerSpeedDropdown.value = seekerSpeedDropdown.options.FindIndex(option => option.text == GameController.Instance.seekerSpeed.ToString());
         if (!settingPanel.activeSelf)
         {
             settingPanel.SetActive(true);
@@ -121,8 +115,6 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
 
     public void ApplyConfig()
     {
-        Debug.Log(float.Parse(prepareTimeDropdown.options[prepareTimeDropdown.value].text));
-
         float prepareTime = float.Parse(prepareTimeDropdown.options[prepareTimeDropdown.value].text);
         float gameTime = float.Parse(gameTimeDropdown.options[gameTimeDropdown.value].text);
         float hiderSpeed = float.Parse(hiderSpeedDropdown.options[hiderSpeedDropdown.value].text);
@@ -131,5 +123,21 @@ public class WaitingRoomManager : MonoBehaviourPunCallbacks
         GameController.Instance.ChangeValue(prepareTime, gameTime, hiderSpeed, seekerSpeed);
 
         settingPanel.SetActive(false);
+
+        photonView.RPC("RPC_SyncSpeed", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void RPC_SyncSpeed()
+    {
+        PlayerManager.localPlayer.SetMoveSpeed();
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            hostCanvas.gameObject.SetActive(true);
+        }
     }
 }

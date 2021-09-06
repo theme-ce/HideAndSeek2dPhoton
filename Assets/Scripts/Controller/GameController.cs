@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class GameController : MonoBehaviourPunCallbacks
+public class GameController : MonoBehaviourPunCallbacks, IPunObservable
 {
     public static GameController Instance;
 
@@ -17,7 +17,7 @@ public class GameController : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if(!Instance)
+        if (!Instance)
         {
             Instance = this;
         }
@@ -43,5 +43,23 @@ public class GameController : MonoBehaviourPunCallbacks
         this.gameTime = gameTime;
         this.hiderSpeed = hiderSpeed;
         this.seekerSpeed = seekerSpeed;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(prepareTime);
+            stream.SendNext(gameTime);
+            stream.SendNext(hiderSpeed);
+            stream.SendNext(seekerSpeed);
+        }
+        else if (stream.IsReading)
+        {
+            prepareTime = (float)stream.ReceiveNext();
+            gameTime = (float)stream.ReceiveNext();
+            hiderSpeed = (float)stream.ReceiveNext();
+            seekerSpeed = (float)stream.ReceiveNext();
+        }
     }
 }

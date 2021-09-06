@@ -15,16 +15,13 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
     [SerializeField] Text playerNameText;
 
     public bool isSeeker;
-    public bool isSpectator;
 
-    private PhotonView _view;
     private Camera _myCamera;
     private AudioListener _myAudio;
     private PlayerController _playerController;
 
     private void Awake()
     {
-        _view = GetComponent<PhotonView>();
         _myCamera = transform.GetChild(2).GetComponent<Camera>();
         _myAudio = transform.GetChild(2).GetComponent<AudioListener>();
         _playerController = GetComponent<PlayerController>();
@@ -32,9 +29,16 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
 
     private void Start()
     {
+        if (PhotonNetwork.LocalPlayer.NickName == "")
+        {
+            PhotonNetwork.LocalPlayer.NickName = "Anonymous" + Random.Range(1, 9999).ToString();
+        }
+
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName);
+
         playerNameText.text = PhotonNetwork.LocalPlayer.NickName;
 
-        if (_view.IsMine)
+        if (photonView.IsMine)
         {
             localPlayer = this;
         }
@@ -52,7 +56,7 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
     //Setup Player
     private void SetPlayer()
     {
-        if (!_view.IsMine)
+        if (!photonView.IsMine)
         {
             _myCamera.gameObject.SetActive(false);
             _myAudio.gameObject.SetActive(false);
@@ -60,6 +64,22 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
             selfLight.SetActive(false);
             return;
         }
+
+        if (GameController.Instance != null)
+        {
+            SetMoveSpeed();
+        }
+        else
+        {
+            StartCoroutine(WaitForGameController());
+        }
+    }
+
+    IEnumerator WaitForGameController()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        SetMoveSpeed();
     }
 
     //Set Color for Seeker
@@ -81,21 +101,33 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
         if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[seekerNumber])
         {
             isSeeker = true;
-            _playerController.moveSpeed = GameController.Instance.seekerSpeed;
-            _view.RPC("RPC_SetSeekerColor", RpcTarget.All);
+            SetMoveSpeed();
+            photonView.RPC("RPC_SetSeekerColor", RpcTarget.All);
         }
     }
 
     public void BecomeHider()
     {
         isSeeker = false;
-        _playerController.moveSpeed = GameController.Instance.hiderSpeed;
-        _view.RPC("RPC_SetHiderColor", RpcTarget.All);
+        SetMoveSpeed();
+        photonView.RPC("RPC_SetHiderColor", RpcTarget.All);
+    }
+
+    public void SetMoveSpeed()
+    {
+        if (isSeeker)
+        {
+            _playerController.moveSpeed = GameController.Instance.seekerSpeed;
+        }
+        else
+        {
+            _playerController.moveSpeed = GameController.Instance.hiderSpeed;
+        }
     }
 
     public void SetPosition(Vector3 position)
     {
-        _view.RPC("RPC_SetPosition", RpcTarget.All, position);
+        photonView.RPC("RPC_SetPosition", RpcTarget.All, position);
     }
 
     [PunRPC]
@@ -107,7 +139,7 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
     public void BecomeSeekerByCatch()
     {
         isSeeker = true;
-        _view.RPC("RPC_SetSeekerColor", RpcTarget.All);
+        photonView.RPC("RPC_SetSeekerColor", RpcTarget.All);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -115,10 +147,12 @@ public class PlayerManager : MonoBehaviourPun, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(isSeeker);
+            stream.SendNext(_playerController.moveSpeed);
         }
         else if (stream.IsReading)
         {
             isSeeker = (bool)stream.ReceiveNext();
+            _playerController.moveSpeed = (float)stream.ReceiveNext();
         }
     }
 

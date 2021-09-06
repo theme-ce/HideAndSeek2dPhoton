@@ -6,6 +6,7 @@ using Photon.Pun;
 public class PlayerController : MonoBehaviourPunCallbacks
 {
     public float moveSpeed = 5f;
+    public bool canMove = true;
 
     private PlayerInput _playerInput;
     private Rigidbody2D _rb;
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        MoveControl();
+        if (canMove) { MoveControl(); }
     }
 
     void MoveControl()

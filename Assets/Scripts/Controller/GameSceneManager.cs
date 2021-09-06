@@ -9,11 +9,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 {
     public static GameSceneManager instance;
 
-    public Transform[] spawnPoints;
-    public Text timeText;
+    [SerializeField] Transform[] spawnPoints;
+    [SerializeField] Text timeText;
+    [SerializeField] Text gameOverText;
 
     private int _whichPlayerIsSeeker;
-    private PhotonView _view;
     private Animator _levelLoaderAnim;
     private int _playerIdx;
     private float _prepareTime = 16f;
@@ -30,13 +30,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             Destroy(instance);
         }
 
-        if (GameObject.Find("LevelLoader") != null)
-        {
-            _levelLoaderAnim = GameObject.Find("LevelLoader").GetComponent<Animator>();
-        }
-
-        _view = GetComponent<PhotonView>();
-
+        if (GameObject.Find("LevelLoader") != null) { _levelLoaderAnim = GameObject.Find("LevelLoader").GetComponent<Animator>(); }
         if (GameObject.Find("StartGameButton")) { GameObject.Find("StartGameButton").SetActive(false); }
     }
 
@@ -54,16 +48,22 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if(_prepareTime > 0)
+        TimeCheck();
+        PlayerCheck();
+    }
+
+    void TimeCheck()
+    {
+        if (_prepareTime > 0)
         {
             _prepareTime -= Time.deltaTime;
-            if(Mathf.Floor(_prepareTime % 60) > 9)
+            if (Mathf.Floor(_prepareTime % 60) > 9)
             {
                 timeText.text = Mathf.Floor(_prepareTime / 60).ToString() + " : " + Mathf.Floor(_prepareTime % 60).ToString();
             }
             else
             {
-                timeText.text = Mathf.Floor(_prepareTime / 60).ToString() + " : " +  "0" + Mathf.Floor(_prepareTime % 60).ToString();
+                timeText.text = Mathf.Floor(_prepareTime / 60).ToString() + " : " + "0" + Mathf.Floor(_prepareTime % 60).ToString();
             }
         }
         else
@@ -71,7 +71,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (_gameTime > 0)
             {
                 _gameTime -= Time.deltaTime;
-                if(Mathf.Floor(_gameTime % 60) > 9)
+                if (Mathf.Floor(_gameTime % 60) > 9)
                 {
                     timeText.text = Mathf.Floor(_gameTime / 60).ToString() + " : " + Mathf.Floor(_gameTime % 60).ToString();
                 }
@@ -85,25 +85,28 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 timeText.text = "Times Up!";
 
-                EndGame();
+                HiderWin();
             }
         }
+    }
 
+    void PlayerCheck()
+    {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
         int seekerCount = 0;
 
         foreach (GameObject player in players)
         {
-            if(player.GetComponent<PlayerManager>().isSeeker)
+            if (player.GetComponent<PlayerManager>().isSeeker)
             {
                 seekerCount += 1;
             }
         }
 
-        if(PhotonNetwork.CurrentRoom.PlayerCount <= seekerCount)
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= seekerCount)
         {
-            EndGame();
+            SeekerWin();
         }
     }
 
@@ -117,7 +120,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     void PickSeeker()
     {
         _whichPlayerIsSeeker = Random.Range(0, PhotonNetwork.CurrentRoom.PlayerCount);
-        _view.RPC("RPC_SyncSeeker", RpcTarget.All, _whichPlayerIsSeeker);
+        photonView.RPC("RPC_SyncSeeker", RpcTarget.All, _whichPlayerIsSeeker);
     }
 
     [PunRPC]
@@ -127,9 +130,18 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         PlayerManager.localPlayer.BecomeSeeker(_whichPlayerIsSeeker);
     }
 
-    void EndGame()
+    void HiderWin()
     {
         timeText.gameObject.SetActive(false);
+        gameOverText.text = "Hider Win!";
+
+        ChangeSceneTo("WaitingRoom");
+    }
+
+    void SeekerWin()
+    {
+        timeText.gameObject.SetActive(false);
+        gameOverText.text = "Seeker Win!";
 
         ChangeSceneTo("WaitingRoom");
     }
@@ -143,7 +155,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     {
         _levelLoaderAnim.SetTrigger("GameEnd");
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
 
         SceneManager.LoadScene(sceneName);
     }

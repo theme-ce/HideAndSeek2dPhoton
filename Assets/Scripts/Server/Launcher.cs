@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
+    public Button playButton;
+
     void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -15,8 +17,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void Connect()
     {
         Debug.Log("Connecting to server.");
-        
+
         PhotonNetwork.ConnectUsingSettings();
+
+        playButton.interactable = false;
     }
 
     public override void OnConnectedToMaster()
@@ -28,7 +32,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        PhotonNetwork.CreateRoom(null, new RoomOptions{ MaxPlayers = 8 });
+        PhotonNetwork.CreateRoom("master", new RoomOptions { MaxPlayers = 8 });
     }
 
     public override void OnCreatedRoom()

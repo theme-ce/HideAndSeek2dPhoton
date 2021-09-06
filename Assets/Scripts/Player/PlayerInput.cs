@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class PlayerInput : MonoBehaviourPunCallbacks
 {
-    Animator animator;
+    private Animator _animator;
 
     public Vector2 MovementInput
     {
@@ -15,25 +15,16 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         }
     }
 
-    public bool IsDash
-    {
-        get
-        {
-            return m_Dash;
-        }
-    }
-
     private Vector2 m_Movement;
-    private bool m_Dash;
 
     private void Start()
     {
-        animator = GetComponent<Animator>(); 
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             ProcessMovementInput();
         }
@@ -46,23 +37,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
         m_Movement = new Vector2(movement_X, movement_Y);
 
-        animator.SetFloat("Speed", m_Movement.magnitude);
-    }
-
-    void ProcessDashInput()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (m_Movement != Vector2.zero)
         {
-            StartCoroutine(Dashing());
+            _animator.SetFloat("Horizontal", movement_X);
+            _animator.SetFloat("Vertical", movement_Y);
         }
-    }
-
-    IEnumerator Dashing()
-    {
-        m_Dash = true;
-
-        yield return new WaitForSeconds(0.2f);
-
-        m_Dash = false;
+        
+        _animator.SetFloat("Speed", m_Movement.magnitude);
     }
 }

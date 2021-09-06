@@ -56,6 +56,9 @@ MonoBehaviour:
   - SetGameTime
   - RPC_ChangeValue
   - RPC_SyncValue
+  - PlayerDisconnected
+  - RPC_SetMoveSpeed
+  - RPC_SyncSpeed
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
